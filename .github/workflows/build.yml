@@ -1,0 +1,51 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev lld
+
+      - name: Install Buildozer & Dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip install buildozer cython virtualenv
+
+      - name: Accept Android SDK Licenses & Install Tools
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "build-tools;34.0.0" "platforms;android-34"
+
+      - name: Build APK with Buildozer
+        run: |
+          yes | buildozer -v android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: mhb3-app-debug-apk
+          path: bin/*.apk
