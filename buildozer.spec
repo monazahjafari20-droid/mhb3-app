@@ -1,0 +1,23 @@
+[app]
+title = MHB3 App
+package.name = mhb3app
+package.domain = org.mhb3
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,json,txt,ttf,otf,db,html,css,js
+version = 1.0.0
+
+requirements = python3.10,kivy,kivymd,flask,reportlab,python-docx,jdatetime,arabic-reshaper,requests,python-bidi
+
+orientation = portrait
+fullscreen = 0
+
+[buildozer]
+android.api = 30
+android.minapi = 21
+android.ndk = 25b
+android.accept_sdk_license = True
+p4a.branch = master
+log_level = 2
+# این دو خط برای اطمینان از استفاده از SDK گیتهاب
+android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk
+android.ndk_path = /home/runner/.buildozer/android/platform/android-ndk-r25b
